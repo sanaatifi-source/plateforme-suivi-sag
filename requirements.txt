@@ -1,6 +1,5 @@
 streamlit
 pandas
-openpyxl
 plotly
-pillow
-fpdf2
+reportlab
+openpyxl
