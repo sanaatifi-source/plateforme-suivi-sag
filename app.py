@@ -346,25 +346,15 @@ st.markdown("""
     background: rgba(0,0,0,0);
 }
 
-[data-testid="stToolbar"] {
-    display: none;
-}
-
 .block-container {
     max-width: 96%;
     padding-top: 1rem;
 }
 
-/* ===================================================== */
-/* HEADER */
-/* ===================================================== */
-
 .top-header {
 
     display: flex;
-
     align-items: center;
-
     gap: 40px;
 
     padding: 30px 45px;
@@ -457,10 +447,6 @@ st.markdown("""
     font-weight: 700;
 }
 
-/* ===================================================== */
-/* KPI */
-/* ===================================================== */
-
 .kpi-card {
 
     background:
@@ -495,26 +481,6 @@ st.markdown("""
 
     color: #f59e0b;
 }
-
-/* ===================================================== */
-/* TABS */
-/* ===================================================== */
-
-.stTabs [data-baseweb="tab"] {
-
-    font-size: 17px;
-
-    font-weight: 700;
-}
-
-.stTabs [aria-selected="true"] {
-
-    color: #f59e0b !important;
-}
-
-/* ===================================================== */
-/* INPUTS */
-/* ===================================================== */
 
 div[data-baseweb="input"] {
 
@@ -561,30 +527,6 @@ div[data-baseweb="select"] span {
     color: white !important;
 }
 
-.stSlider {
-
-    color: white !important;
-}
-
-/* ===================================================== */
-/* EXPANDER */
-/* ===================================================== */
-
-div[data-testid="stExpander"] {
-
-    background:
-        rgba(15,15,15,0.84) !important;
-
-    border:
-        1px solid rgba(245,158,11,0.25);
-
-    border-radius: 18px !important;
-}
-
-/* ===================================================== */
-/* SYNOPTIQUE */
-/* ===================================================== */
-
 .synoptic-card {
 
     background:
@@ -596,59 +538,6 @@ div[data-testid="stExpander"] {
 
     text-align: center;
 }
-
-/* ===================================================== */
-/* EVENT */
-/* ===================================================== */
-
-.event-card {
-
-    background:
-        rgba(20,20,20,0.82);
-
-    border-left:
-        4px solid #f59e0b;
-
-    border-radius: 14px;
-
-    padding: 14px 18px;
-
-    margin-bottom: 12px;
-}
-
-/* ===================================================== */
-/* FIELD BOX */
-/* ===================================================== */
-
-.field-box {
-
-    background:
-        rgba(15,15,15,0.78);
-
-    border:
-        1px solid rgba(245,158,11,0.30);
-
-    border-radius: 22px;
-
-    padding: 20px;
-
-    margin-bottom: 24px;
-
-    font-size: 18px;
-}
-
-/* ===================================================== */
-/* LABELS */
-/* ===================================================== */
-
-label, p, span {
-
-    color: #f5f5f5 !important;
-}
-
-/* ===================================================== */
-/* FOOTER */
-/* ===================================================== */
 
 .footer-text {
 
@@ -712,35 +601,21 @@ etapes_base = [
 
     {
         "Zone": "Fond d'entrée",
-        "Etape": "Démontage du centre vers l'extrémité",
+        "Etape": "Démontage",
         "Qty": 1,
         "Duree_Estimee_h": 2.0
     },
 
     {
         "Zone": "Fond d'entrée",
-        "Etape": "Montage outer head liners",
+        "Etape": "Montage outer liners",
         "Qty": 32,
         "Duree_Estimee_h": 13.3
     },
 
     {
-        "Zone": "Fond d'entrée",
-        "Etape": "Montage middle head liners",
-        "Qty": 16,
-        "Duree_Estimee_h": 6.7
-    },
-
-    {
         "Zone": "Virole",
-        "Etape": "Montage shell liner 1",
-        "Qty": 60,
-        "Duree_Estimee_h": 50.0
-    },
-
-    {
-        "Zone": "Virole",
-        "Etape": "Montage shell liner 2",
+        "Etape": "Montage shell liner",
         "Qty": 60,
         "Duree_Estimee_h": 50.0
     },
@@ -750,7 +625,7 @@ etapes_base = [
         "Etape": "Montage grate",
         "Qty": 32,
         "Duree_Estimee_h": 16.0
-    },
+    }
 
 ]
 
@@ -768,14 +643,12 @@ if "data" not in st.session_state:
     df_init["Avancement_%"] = 0
     df_init["Heure_debut_reelle"] = ""
     df_init["Heure_fin_reelle"] = ""
-    df_init["Equipe_responsable"] = ""
-    df_init["Commentaire_terrain"] = ""
     df_init["Retard_detecte"] = "Non"
 
     st.session_state.data = df_init
 
 # =========================================================
-# ONGLETS
+# TABS
 # =========================================================
 
 tab1, tab2 = st.tabs([
@@ -793,99 +666,6 @@ with tab1:
         "## Saisie & Suivi terrain"
     )
 
-    data = st.session_state.data.copy()
-
-    selected_zone = st.selectbox(
-        "Sélectionner la zone d’intervention",
-        data["Zone"].unique()
-    )
-
-    zone_df = data[
-        data["Zone"] == selected_zone
-    ].copy()
-
-    st.markdown(
-        f"## Zone sélectionnée : {selected_zone}"
-    )
-
-    st.markdown("""
-    <div class="field-box">
-    Cette zone permet de renseigner l’avancement réel,
-    les heures terrain, les équipes,
-    les problèmes rencontrés et les écarts.
-    </div>
-    """, unsafe_allow_html=True)
-
-    for idx, row in zone_df.iterrows():
-
-        with st.expander(
-            f"{row['Etape']} — Quantité : {row['Qty']}"
-        ):
-
-            c1, c2 = st.columns(2)
-
-            with c1:
-
-                statut = st.selectbox(
-                    "Statut",
-                    [
-                        "Non démarré",
-                        "En cours",
-                        "Terminé",
-                        "Bloqué"
-                    ],
-                    key=f"st_{idx}"
-                )
-
-                avancement = st.slider(
-                    "Avancement (%)",
-                    0,
-                    100,
-                    int(row["Avancement_%"]),
-                    key=f"av_{idx}"
-                )
-
-                heure_debut = st.text_input(
-                    "Heure début réelle",
-                    placeholder="08:00",
-                    key=f"deb_{idx}"
-                )
-
-                heure_fin = st.text_input(
-                    "Heure fin réelle",
-                    placeholder="14:00",
-                    key=f"fin_{idx}"
-                )
-
-            with c2:
-
-                equipe = st.text_input(
-                    "Équipe responsable",
-                    placeholder="Exemple : Équipe mécanique",
-                    key=f"eq_{idx}"
-                )
-
-                commentaire = st.text_area(
-                    "Commentaire terrain",
-                    key=f"com_{idx}"
-                )
-
-                retard = st.selectbox(
-                    "Retard détecté",
-                    ["Non", "Oui"],
-                    key=f"ret_{idx}"
-                )
-
-            data.loc[idx, "Statut"] = statut
-            data.loc[idx, "Avancement_%"] = avancement
-            data.loc[idx, "Heure_debut_reelle"] = heure_debut
-            data.loc[idx, "Heure_fin_reelle"] = heure_fin
-            data.loc[idx, "Equipe_responsable"] = equipe
-            data.loc[idx, "Commentaire_terrain"] = commentaire
-            data.loc[idx, "Retard_detecte"] = retard
-
-    st.session_state.data = data
-
 # =========================================================
 # ONGLET 2
 # =========================================================
@@ -893,81 +673,10 @@ with tab1:
 with tab2:
 
     st.markdown(
-        "## Dashboard KPI"
+        "## Synoptique SAG"
     )
 
     df = st.session_state.data.copy()
-
-    df["Duree_Reelle_h"] = df.apply(
-
-        lambda row:
-        calculer_duree_reelle(
-            row["Heure_debut_reelle"],
-            row["Heure_fin_reelle"]
-        ),
-
-        axis=1
-    )
-
-    df["Duree_Dashboard_h"] = (
-        df["Duree_Reelle_h"]
-        .fillna(df["Duree_Estimee_h"])
-    )
-
-    duree_estimee = (
-        df["Duree_Estimee_h"].sum()
-    )
-
-    duree_reelle = (
-        df["Duree_Reelle_h"].sum()
-    )
-
-    avancement = (
-        df["Avancement_%"].mean()
-    )
-
-    retards = len(
-        df[df["Retard_detecte"] == "Oui"]
-    )
-
-    k1, k2, k3, k4 = st.columns(4)
-
-    with k1:
-
-        show_kpi(
-            "Durée estimée",
-            f"{duree_estimee:.1f}",
-            "h"
-        )
-
-    with k2:
-
-        show_kpi(
-            "Durée réelle",
-            f"{duree_reelle:.1f}",
-            "h"
-        )
-
-    with k3:
-
-        show_kpi(
-            "Avancement global",
-            f"{avancement:.1f}",
-            "%"
-        )
-
-    with k4:
-
-        show_kpi(
-            "Retards",
-            retards
-        )
-
-    st.markdown("---")
-
-    st.markdown(
-        "## Synoptique SAG"
-    )
 
     zone_progress = df.groupby(
         "Zone",
@@ -1002,33 +711,6 @@ with tab2:
 
             </div>
             """, unsafe_allow_html=True)
-
-    st.markdown("---")
-
-    st.markdown(
-        "## Répartition des durées"
-    )
-
-    zone_duration = df.groupby(
-        "Zone",
-        as_index=False
-    )["Duree_Dashboard_h"].sum()
-
-    fig = px.pie(
-        zone_duration,
-        names="Zone",
-        values="Duree_Dashboard_h"
-    )
-
-    fig.update_layout(
-        template="plotly_dark",
-        paper_bgcolor="rgba(0,0,0,0)"
-    )
-
-    st.plotly_chart(
-        fig,
-        use_container_width=True
-    )
 
     st.markdown("---")
 
