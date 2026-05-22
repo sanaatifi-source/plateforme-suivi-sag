@@ -88,19 +88,18 @@ def couleur_avancement(av):
 def show_kpi(title, value, unit=""):
 
     st.markdown(f"""
-    <div class="kpi-card">
+<div class="kpi-card">
 
-        <div class="kpi-title">
-            {title}
-        </div>
+<div class="kpi-title">
+{title}
+</div>
 
-        <div class="kpi-value">
-            {value} {unit}
-        </div>
+<div class="kpi-value">
+{value} {unit}
+</div>
 
-    </div>
-    """, unsafe_allow_html=True)
-
+</div>
+""", unsafe_allow_html=True)
 
 # =========================================================
 # PDF
@@ -179,53 +178,11 @@ def generer_pdf(df):
 
     elements.append(table)
 
-    elements.append(
-        Spacer(1, 20)
-    )
-
-    zone_data = [["Zone", "Durée (h)"]]
-
-    zone_duration = df.groupby(
-        "Zone",
-        as_index=False
-    )["Duree_Dashboard_h"].sum()
-
-    for _, row in zone_duration.iterrows():
-
-        zone_data.append([
-            row["Zone"],
-            f"{row['Duree_Dashboard_h']:.1f}"
-        ])
-
-    table2 = Table(zone_data, colWidths=[260, 180])
-
-    table2.setStyle(TableStyle([
-
-        ("BACKGROUND", (0, 0), (-1, 0),
-         colors.HexColor("#D97706")),
-
-        ("TEXTCOLOR", (0, 0), (-1, 0),
-         colors.white),
-
-        ("GRID", (0, 0), (-1, -1),
-         0.5, colors.grey),
-
-        ("FONTNAME", (0, 0), (-1, 0),
-         "Helvetica-Bold"),
-
-        ("PADDING", (0, 0), (-1, -1),
-         8)
-
-    ]))
-
-    elements.append(table2)
-
     doc.build(elements)
 
     buffer.seek(0)
 
     return buffer
-
 
 # =========================================================
 # IMAGES
@@ -246,94 +203,94 @@ logo_img = get_base64_image(
 if blindage_img:
 
     st.markdown(f"""
-    <style>
+<style>
 
-    .stApp {{
+.stApp {{
 
-        background:
-            radial-gradient(
-                circle at center,
-                rgba(35,35,35,0.80) 0%,
-                rgba(15,15,15,0.95) 55%,
-                rgba(0,0,0,1) 100%
-            );
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(35,35,35,0.80) 0%,
+            rgba(15,15,15,0.95) 55%,
+            rgba(0,0,0,1) 100%
+        );
 
-        color: white;
-        overflow-x: hidden;
-    }}
+    color: white;
+    overflow-x: hidden;
+}}
 
-    .stApp::before {{
+.stApp::before {{
 
-        content: "";
+    content: "";
 
-        position: fixed;
+    position: fixed;
 
-        top: 50%;
-        left: 50%;
+    top: 50%;
+    left: 50%;
 
-        width: 850px;
-        height: 850px;
+    width: 850px;
+    height: 850px;
+
+    transform:
+        translate(-50%, -50%);
+
+    z-index: 0;
+
+    pointer-events: none;
+
+    background-image:
+
+        radial-gradient(
+            circle,
+            rgba(0,0,0,0) 20%,
+            rgba(0,0,0,0.20) 55%,
+            rgba(0,0,0,0.80) 82%,
+            rgba(0,0,0,1) 100%
+        ),
+
+        url(
+            "data:image/jpeg;base64,{blindage_img}"
+        );
+
+    background-size: cover;
+
+    background-repeat: no-repeat;
+
+    background-position: center;
+
+    opacity: 0.32;
+
+    animation:
+        rotateBlindage 85s linear infinite;
+}}
+
+@keyframes rotateBlindage {{
+
+    from {{
 
         transform:
-            translate(-50%, -50%);
+            translate(-50%, -50%)
+            rotate(0deg);
 
-        z-index: 0;
-
-        pointer-events: none;
-
-        background-image:
-
-            radial-gradient(
-                circle,
-                rgba(0,0,0,0) 20%,
-                rgba(0,0,0,0.20) 55%,
-                rgba(0,0,0,0.80) 82%,
-                rgba(0,0,0,1) 100%
-            ),
-
-            url(
-                "data:image/jpeg;base64,{blindage_img}"
-            );
-
-        background-size: cover;
-
-        background-repeat: no-repeat;
-
-        background-position: center;
-
-        opacity: 0.32;
-
-        animation:
-            rotateBlindage 85s linear infinite;
     }}
 
-    @keyframes rotateBlindage {{
+    to {{
 
-        from {{
+        transform:
+            translate(-50%, -50%)
+            rotate(360deg);
 
-            transform:
-                translate(-50%, -50%)
-                rotate(0deg);
-
-        }}
-
-        to {{
-
-            transform:
-                translate(-50%, -50%)
-                rotate(360deg);
-
-        }}
     }}
+}}
 
-    .stApp > div {{
+.stApp > div {{
 
-        position: relative;
-        z-index: 1;
-    }}
+    position: relative;
+    z-index: 1;
+}}
 
-    </style>
-    """, unsafe_allow_html=True)
+</style>
+""", unsafe_allow_html=True)
 
 # =========================================================
 # CSS
@@ -482,51 +439,6 @@ st.markdown("""
     color: #f59e0b;
 }
 
-div[data-baseweb="input"] {
-
-    background-color:
-        rgba(20,20,20,0.95) !important;
-
-    border-radius: 14px !important;
-}
-
-div[data-baseweb="input"] input {
-
-    color: white !important;
-
-    background-color:
-        rgba(20,20,20,0.95) !important;
-}
-
-div[data-baseweb="textarea"] {
-
-    background-color:
-        rgba(20,20,20,0.95) !important;
-
-    border-radius: 14px !important;
-}
-
-div[data-baseweb="textarea"] textarea {
-
-    color: white !important;
-
-    background-color:
-        rgba(20,20,20,0.95) !important;
-}
-
-div[data-baseweb="select"] > div {
-
-    background-color:
-        rgba(20,20,20,0.95) !important;
-
-    color: white !important;
-}
-
-div[data-baseweb="select"] span {
-
-    color: white !important;
-}
-
 .synoptic-card {
 
     background:
@@ -560,38 +472,38 @@ div[data-baseweb="select"] span {
 if logo_img:
 
     st.markdown(f"""
-    <div class="top-header">
+<div class="top-header">
 
-        <div class="logo-zone">
+<div class="logo-zone">
 
-            <img
-                src="data:image/jpeg;base64,{logo_img}"
-                class="logo-managem">
+<img
+src="data:image/jpeg;base64,{logo_img}"
+class="logo-managem">
 
-        </div>
+</div>
 
-        <div>
+<div>
 
-            <div class="header-small">
-                MANAGEM - SITE TIZERT
-            </div>
+<div class="header-small">
+MANAGEM - SITE TIZERT
+</div>
 
-            <div class="header-title">
-                Plateforme de Suivi du Changement de Blindage SAG
-            </div>
+<div class="header-title">
+Plateforme de Suivi du Changement de Blindage SAG
+</div>
 
-            <div class="header-subtitle">
-                Suivi terrain • KPI • Dashboard • Rapport PDF
-            </div>
+<div class="header-subtitle">
+Suivi terrain • KPI • Dashboard • Rapport PDF
+</div>
 
-            <div class="dev-signature">
-                Développée par : {DEVELOPPEUR}
-            </div>
+<div class="dev-signature">
+Développée par : {DEVELOPPEUR}
+</div>
 
-        </div>
+</div>
 
-    </div>
-    """, unsafe_allow_html=True)
+</div>
+""", unsafe_allow_html=True)
 
 # =========================================================
 # DONNÉES
@@ -641,9 +553,6 @@ if "data" not in st.session_state:
 
     df_init["Statut"] = "Non démarré"
     df_init["Avancement_%"] = 0
-    df_init["Heure_debut_reelle"] = ""
-    df_init["Heure_fin_reelle"] = ""
-    df_init["Retard_detecte"] = "Non"
 
     st.session_state.data = df_init
 
@@ -694,23 +603,23 @@ with tab2:
             )
 
             st.markdown(f"""
-            <div class="synoptic-card"
-                style="
-                border:2px solid {color};
-                ">
+<div class="synoptic-card"
+style="
+border:2px solid {color};
+">
 
-                <h3>{row['Zone']}</h3>
+<h3>{row['Zone']}</h3>
 
-                <div style="
-                    font-size:34px;
-                    font-weight:900;
-                    color:{color};
-                ">
-                    {row['Avancement_%']:.1f}%
-                </div>
+<div style="
+font-size:34px;
+font-weight:900;
+color:{color};
+">
+{row['Avancement_%']:.1f}%
+</div>
 
-            </div>
-            """, unsafe_allow_html=True)
+</div>
+""", unsafe_allow_html=True)
 
     st.markdown("---")
 
@@ -735,12 +644,12 @@ st.markdown("---")
 
 st.markdown(
     f"""
-    <div class="footer-text">
+<div class="footer-text">
 
-    Développée par :
-    {DEVELOPPEUR}
+Développée par :
+{DEVELOPPEUR}
 
-    </div>
-    """,
+</div>
+""",
     unsafe_allow_html=True
 )
