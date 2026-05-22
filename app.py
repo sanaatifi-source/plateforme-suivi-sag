@@ -50,29 +50,6 @@ def get_base64_image(image_path):
     return None
 
 
-def calculer_duree_reelle(debut, fin):
-
-    try:
-
-        if debut == "" or fin == "":
-            return None
-
-        h1 = datetime.strptime(debut, "%H:%M")
-        h2 = datetime.strptime(fin, "%H:%M")
-
-        duree = (
-            h2 - h1
-        ).total_seconds() / 3600
-
-        if duree < 0:
-            duree += 24
-
-        return round(duree, 2)
-
-    except:
-        return None
-
-
 def couleur_avancement(av):
 
     if av < 30:
@@ -553,6 +530,7 @@ if "data" not in st.session_state:
 
     df_init["Statut"] = "Non démarré"
     df_init["Avancement_%"] = 0
+    df_init["Duree_Reelle_h"] = 0
 
     st.session_state.data = df_init
 
@@ -626,6 +604,9 @@ color:{color};
     st.markdown(
         "## Rapport PDF professionnel"
     )
+
+    if "Duree_Reelle_h" not in df.columns:
+        df["Duree_Reelle_h"] = 0
 
     pdf_buffer = generer_pdf(df)
 
